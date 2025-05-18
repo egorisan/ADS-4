@@ -1,68 +1,64 @@
 // Copyright 2021 NNTU-CS
 
-int countPairs1(int* arr, int len, int value)
-{
-    int count = 0;
-    for (int i = 0; i < len; ++i) {
-        for (int j = i + 1; j < len; ++j) {
-            if (arr[i] + arr[j] == value) {
-                ++count;
-            }
-        }
-    }
-    return count;
+int countPairs1(int* arr, int len, int value) {
+  int k = 0;
+  for (int i = 0; i < len - 1; i++)
+    for (int j = i + 1; j < len; j++)
+      if (arr[i] + arr[j] == value) k++;
+  return k;
 }
 
-int countPairs2(int* arr, int len, int value)
-{
-    int count = 0;
-    int left = 0, right = len - 1;
-
-    while (left < right) {
-        int sum = arr[left] + arr[right];
-        if (sum == value) {
-            ++count;
-            while (left < right && arr[left] == arr[left + 1]) ++left;
-            while (left < right && arr[right] == arr[right - 1]) --right;
-            ++left;
-            --right;
-        }
-        else if (sum < value) {
-            ++left;
-        }
-        else {
-            --right;
-        }
+int countPairs2(int* arr, int len, int value) {
+  int k = 0;
+  int a = len - 1;
+  while (a > 0) {
+    if (arr[a] > value) {
+      a--;
+    } else {
+      break;
     }
-    return count;
-}
-
-
-int B_search(int* arr, int low, int high, int target) {
-    while (low <= high) {
-        int mid = low + (high - low) / 2;
-        if (arr[mid] == target) {
-            return mid;
-        }
-        else if (arr[mid] < target) {
-            low = mid + 1;
-        }
-        else {
-            high = mid - 1;
-        }
+  }
+  for (int i = 0; i < len; i++) {
+    for (int j = a; j > i; j--) {
+      if (arr[i] + arr[j] == value) k++;
     }
-    return -1;
+  }
+  return k;
 }
 
 int countPairs3(int* arr, int len, int value) {
-    int count = 0;
-    for (int i = 0; i < len; ++i) {
-        int complement = value - arr[i];
-        if (complement >= arr[i]) {
-            if (B_search(arr, i + 1, len - 1, complement) != -1) {
-                ++count;
-            }
-        }
+  int k = 0;
+  for (int i = 0; i < len; ++i) {
+    int a = -1;
+    l = i + 1;
+    r = len - 1;
+    V = value - arr[i];
+    while (l <= r) {
+      int m = l + (r - l) / 2;
+      if (arr[m] >= V) {
+        r = m - 1;
+        if (arr[m] == V) a = m;
+      } else {
+        l = m + 1;
+      }
     }
-    return count;
+    if (a != -1) {
+      int b = a;
+      r = len - 1;
+      l = a;
+      
+      while (l <= r) {
+        int m = l + (r - l) / 2;
+        if (arr[m] <= V) {
+          l = m + 1;
+          if (arr[m] == V) b = m;
+        } else {
+          r = m - 1;
+        }
+      }
+      k += b - a + 1;
+    }
+  }
+  return k;
 }
+
